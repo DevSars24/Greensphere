@@ -142,23 +142,47 @@ Week 4: Business Basics (Accounting, Digital tools)
 Week 5: Marketing & Branding
 Week 6: Finance & Linkages (Loans, Schemes)
 
-If the user asks about a specific week, explain the key takeaways.
-Keep answers concise (under 100 words) but helpful.
-Support Languages: Hindi, English, Hinglish. Detect language and reply in same.
+If the user asks about a specific week, explain the key takeaways factually based on this curriculum.
+Never invent weeks or fake scheme details. Keep answers concise (under 100 words), encouraging, and practical.
+Support Languages: Hindi, English, Hinglish. Detect language and reply in the same language.
 """
 
 @router.post("/training-chat", response_model=TrainingChatResponse)
 async def training_chat_endpoint(request: TrainingChatRequest):
+    groq_key = os.getenv("GROQ_API_KEY")
+    groq_model = os.getenv("GROQ_MODEL", "openai/gpt-oss-120b")
+    
+    # 1. Try Groq (high-speed, factual inference)
+    if groq_key:
+        try:
+            from groq import Groq
+            client = Groq(api_key=groq_key)
+            completion = client.chat.completions.create(
+                model=groq_model,
+                messages=[
+                    {"role": "system", "content": TRAINING_SYSTEM_INSTRUCTION},
+                    {"role": "user", "content": request.message}
+                ],
+                temperature=0.2,
+                max_tokens=300
+            )
+            if completion.choices and completion.choices[0].message.content:
+                return TrainingChatResponse(response=completion.choices[0].message.content.strip())
+        except Exception as e:
+            print(f"[GROQ TRAINING-CHAT NOTICE]: {e}, falling back to Gemini")
+
+    # 2. Fallback to Gemini
     api_key = os.getenv("GEMINI_API_KEY")
     if not api_key:
-        return TrainingChatResponse(response="Server Error: API Key missing.")
+        return TrainingChatResponse(response="Server Error: AI API Key missing. Please configure backend/.env.")
 
     try:
+        genai.configure(api_key=api_key)
         model = genai.GenerativeModel(
-            model_name="gemini-2.0-flash", # Faster model for chat
+            model_name="gemini-2.0-flash",
             system_instruction=TRAINING_SYSTEM_INSTRUCTION
         )
         response = model.generate_content(request.message)
-        return TrainingChatResponse(response=response.text)
+        return TrainingChatResponse(response=response.text.strip())
     except Exception as e:
         return TrainingChatResponse(response=f"Error processing request: {str(e)}")

@@ -22,6 +22,18 @@ GEMINI_API_KEY = os.getenv("GEMINI_API_KEY")
 if GEMINI_API_KEY:
     genai.configure(api_key=GEMINI_API_KEY)
 
+# --- Groq High-Speed Inference Configuration ---
+GROQ_API_KEY = os.getenv("GROQ_API_KEY")
+GROQ_MODEL = os.getenv("GROQ_MODEL", "openai/gpt-oss-120b")
+groq_client = None
+if GROQ_API_KEY:
+    try:
+        from groq import Groq
+        groq_client = Groq(api_key=GROQ_API_KEY)
+        print(f"[GROQ] Initialized Groq client with model: {GROQ_MODEL}")
+    except Exception as e:
+        print(f"[GROQ] Warning initializing Groq: {e}")
+
 router = APIRouter(
     prefix="/chat",
     tags=["Unified Chatbot"]
@@ -278,43 +290,73 @@ def get_ai_response(
             f"Location: {loc_name}\nWeather: {weather}\n"
         )
 
-    # 3. Use Gemini Model (gemini-2.5-flash-lite)
+    # 3. System Instruction for Factual, Empathetic Krishi Sathi
     system_instruction = (
         f"You are Krishi Sathi, an expert agricultural AI assistant dedicated to helping Indian farmers. "
         f"Respond strictly in the requested language: {lang}. "
         "Tone: Empathetic, respectful (use terms like Kisan Bhai, Namaste), practical, concise, and highly actionable. "
-        "Cover farming advice, crop diseases, organic fertilizers, market price advice, weather precautions, and government schemes. "
+        "Core Rules: "
+        "- Provide factual and verified farming advice, crop diseases, organic fertilizers, market price advice, weather precautions, and government schemes. "
+        "- STRICTLY DO NOT HALLUCINATE: Never invent non-existent government portals, fake toll-free numbers, or fake crop prices. "
+        "- If live data or weather context is provided below, rely strictly upon it. "
         f"{context}"
     )
 
+    # 4. If image is provided, use Gemini Vision (multimodal leaf/crop diagnosis)
+    if image_b64:
+        try:
+            model = genai.GenerativeModel(
+                model_name="gemini-2.5-flash-lite",
+                system_instruction=system_instruction
+            )
+            import PIL.Image
+            image_bytes = base64.b64decode(image_b64)
+            img = PIL.Image.open(io.BytesIO(image_bytes))
+            prompt_parts = [img, f"Analyze this image for crop health or issue and answer: {current_prompt}"]
+            response = model.generate_content(prompt_parts)
+            if response and response.text:
+                return response.text.strip()
+        except Exception as vision_err:
+            print(f"[VISION ERROR]: {vision_err}")
+
+    # 5. Fast Text Chat with Groq (Blazing fast inference, low latency, low temperature to prevent hallucination)
+    if groq_client and not image_b64:
+        try:
+            groq_messages = [{"role": "system", "content": system_instruction}]
+            recent_msgs = history[-8:] if len(history) > 8 else history
+            for msg in recent_msgs:
+                role = "user" if msg.role == "user" else "assistant"
+                groq_messages.append({"role": role, "content": msg.content})
+            groq_messages.append({"role": "user", "content": current_prompt})
+
+            completion = groq_client.chat.completions.create(
+                model=GROQ_MODEL,
+                messages=groq_messages,
+                temperature=0.2, # Low temperature ensures factual grounding & prevents hallucinations
+                max_tokens=1024
+            )
+            if completion.choices and completion.choices[0].message.content:
+                return completion.choices[0].message.content.strip()
+        except Exception as groq_err:
+            print(f"[GROQ CHAT NOTICE]: {groq_err}, falling back to Gemini")
+
+    # 6. Fallback to Gemini Model
     try:
         model = genai.GenerativeModel(
             model_name="gemini-2.5-flash-lite",
             system_instruction=system_instruction
         )
 
-        # Build contents from history and current message
         contents = []
         recent_msgs = history[-8:] if len(history) > 8 else history
         for msg in recent_msgs:
             role = "user" if msg.role == "user" else "model"
             contents.append({"role": role, "parts": [msg.content]})
 
-        current_parts = []
-        if image_b64:
-            import PIL.Image
-            image_bytes = base64.b64decode(image_b64)
-            img = PIL.Image.open(io.BytesIO(image_bytes))
-            current_parts.append(img)
-            current_parts.append(f"Analyze this image for crop health or issue and answer: {current_prompt}")
-        else:
-            current_parts.append(current_prompt)
-
-        contents.append({"role": "user", "parts": current_parts})
-
+        contents.append({"role": "user", "parts": [current_prompt]})
         response = model.generate_content(contents)
         if response and response.text:
-            return response.text
+            return response.text.strip()
         return "Namaste! Main aapki kheti sambandhi madad ke liye taiyar hoon. Kripya apna prashna dobara poochein."
 
     except Exception as e:
@@ -442,6 +484,19 @@ async def transcribe_voice(file: UploadFile = File(...)):
         raise HTTPException(status_code=400, detail="No audio file uploaded")
     try:
         audio_bytes = await file.read()
+
+        # 0. Groq Whisper (Ultra fast, highly accurate speech-to-text)
+        if groq_client:
+            try:
+                filename = file.filename or "audio.webm"
+                transcription = groq_client.audio.transcriptions.create(
+                    file=(filename, audio_bytes),
+                    model="whisper-large-v3-turbo"
+                )
+                if transcription and transcription.text and transcription.text.strip():
+                    return {"text": transcription.text.strip()}
+            except Exception as groq_stt_err:
+                print(f"[TRANSCRIBE] Groq Whisper notice: {groq_stt_err}")
 
         # 1. Hugging Face Whisper Turbo (if HF_TOKEN configured)
         hf_token = os.getenv("HF_TOKEN") or HF_TOKEN
