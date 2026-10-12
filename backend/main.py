@@ -20,7 +20,7 @@ from tools import (
 from database import client
 
 # Import Routers
-from routers import women_empowerment, chat_service, community, kisan_kendra, mandi
+from routers import women_empowerment, chat_service, community, kisan_kendra, mandi, hf_features
 
 # ===============================
 # Load .env from backend folder
@@ -93,6 +93,7 @@ app.include_router(chat_service.router)
 app.include_router(community.router)
 app.include_router(kisan_kendra.router)
 app.include_router(mandi.router)
+app.include_router(hf_features.router)
 
 # ===============================
 # Groq High-Speed Agent Config

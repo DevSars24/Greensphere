@@ -33,6 +33,15 @@ export default function GetStarted() {
 
   const features = [
     {
+      title: "Hugging Face AI",
+      subtitle: "AI Studio",
+      desc: "Leaf diagnosis, illustration gen, speech & RAG.",
+      icon: <Sparkles className="w-5 h-5 text-emerald-400" />,
+      size: "col-span-1 row-span-1",
+      color: "rgba(16, 185, 129, 0.1)",
+      link: "/huggingface-ai"
+    },
+    {
       title: "AI Chatbot",
       subtitle: "Krishi Sathi",
       desc: "Instant answers for crops & soil.",

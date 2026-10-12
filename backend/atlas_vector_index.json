@@ -1,0 +1,23 @@
+{
+  "_comment": "MongoDB Atlas Vector Search index definition for Krishi Mitra gov_documents collection.",
+  "collection": "gov_documents",
+  "database": "krishi_mitra",
+  "index_name": "vector_index",
+  "fields": [
+    {
+      "type": "vector",
+      "path": "embedding",
+      "numDimensions": 384,
+      "similarity": "cosine"
+    },
+    {
+      "type": "filter",
+      "path": "ministry"
+    },
+    {
+      "type": "filter",
+      "path": "scheme_title"
+    }
+  ],
+  "note": "numDimensions is set to 384 for sentence-transformers/all-MiniLM-L6-v2. If configured with BAAI/bge-m3, change numDimensions to 1024."
+}
