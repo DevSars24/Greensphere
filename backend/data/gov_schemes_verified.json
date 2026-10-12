@@ -1,0 +1,58 @@
+[
+  {
+    "scheme_id": "pm-kisan",
+    "scheme_title": "Pradhan Mantri Kisan Samman Nidhi (PM-KISAN)",
+    "ministry": "Ministry of Agriculture and Farmers Welfare",
+    "source_url": "https://pmkisan.gov.in/",
+    "section": "Eligibility & Financial Benefit",
+    "chunk_text": "Under the PM-KISAN scheme, financial benefit of Rs. 6,000 per year is provided to all landholding farmer families across the country, subject to certain exclusion criteria. The amount is released in three equal installments of Rs. 2,000 every four months directly into the bank accounts of the beneficiaries through Direct Benefit Transfer (DBT)."
+  },
+  {
+    "scheme_id": "pm-kisan-exclusions",
+    "scheme_title": "Pradhan Mantri Kisan Samman Nidhi (PM-KISAN)",
+    "ministry": "Ministry of Agriculture and Farmers Welfare",
+    "source_url": "https://pmkisan.gov.in/",
+    "section": "Exclusion Criteria & Mandates",
+    "chunk_text": "Institutional landholders, farmer families holding constitutional posts, serving or retired government officers/employees, professionals (doctors, engineers, lawyers, CAs), and individuals who paid income tax in the last assessment year are strictly excluded. Mandatory requirements include eKYC verification, Aadhaar-seeded active bank accounts, and verified land records on the state portal."
+  },
+  {
+    "scheme_id": "pmfby-coverage",
+    "scheme_title": "Pradhan Mantri Fasal Bima Yojana (PMFBY)",
+    "ministry": "Ministry of Agriculture and Farmers Welfare",
+    "source_url": "https://pmfby.gov.in/",
+    "section": "Premium Rates & Risk Coverage",
+    "chunk_text": "PMFBY provides comprehensive crop insurance from pre-sowing to post-harvest against non-preventable natural risks (drought, flood, unseasonal rains, pest attacks). The maximum premium payable by farmers is only 2.0% for Kharif food and oilseed crops, 1.5% for Rabi crops, and 5.0% for annual commercial/horticultural crops. The remaining premium is shared equally by Central and State Governments."
+  },
+  {
+    "scheme_id": "pmfby-claim-intimation",
+    "scheme_title": "Pradhan Mantri Fasal Bima Yojana (PMFBY)",
+    "ministry": "Ministry of Agriculture and Farmers Welfare",
+    "source_url": "https://pmfby.gov.in/",
+    "section": "Claim Intimation & Timelines",
+    "chunk_text": "In the event of localized calamities like hailstorm, landslide, inundation, or post-harvest crop damage (within 14 days of harvest while drying in the field), the affected farmer must report the crop loss within 72 hours of the incident via the Crop Insurance App, national toll-free helpline (14447), or their designated bank/insurance representative."
+  },
+  {
+    "scheme_id": "soil-health-card",
+    "scheme_title": "Soil Health Card Scheme",
+    "ministry": "Department of Agriculture, Cooperation & Farmers Welfare",
+    "source_url": "https://soilhealth.dac.gov.in/",
+    "section": "Soil Parameters & Dosage Guidance",
+    "chunk_text": "The Soil Health Card reports the nutrient status of the farmer's soil across 12 crucial parameters: primary nutrients (Nitrogen N, Phosphorus P, Potassium K), secondary nutrient (Sulphur S), micronutrients (Zinc, Iron, Copper, Manganese, Boron), and physical parameters (pH, Electrical Conductivity EC, Organic Carbon OC). It issues customized fertilizer dosage recommendations to eliminate chemical overuse and improve soil fertility."
+  },
+  {
+    "scheme_id": "pmksy-irrigation",
+    "scheme_title": "Pradhan Mantri Krishi Sinchayee Yojana (PMKSY) - Per Drop More Crop",
+    "ministry": "Ministry of Jal Shakti & Ministry of Agriculture",
+    "source_url": "https://pmksy.gov.in/",
+    "section": "Micro-Irrigation Subsidy",
+    "chunk_text": "The 'Per Drop More Crop' component focuses on micro-irrigation technologies such as drip and sprinkler systems. Small and marginal farmers receive financial assistance of up to 55% of the system benchmark cost, while other farmers receive up to 45%. The objective is to maximize water-use efficiency, reduce fertilizer runoff through fertigation, and enhance crop productivity."
+  },
+  {
+    "scheme_id": "mksp-women",
+    "scheme_title": "Mahila Kisan Sashaktikaran Pariyojana (MKSP)",
+    "ministry": "Ministry of Rural Development",
+    "source_url": "https://mksp.gov.in/",
+    "section": "Women Farmer Self-Help Group Support",
+    "chunk_text": "A sub-component of Deendayal Antyodaya Yojana-NRLM, MKSP seeks to improve the capacities of women in agriculture by making systematic investments to enhance their participation and productivity. It creates community resource persons (Krishi Sakhis), supports non-pesticidal management practices, and facilitates low-interest institutional bank credit linkages for Women Self-Help Groups (WSHGs)."
+  }
+]

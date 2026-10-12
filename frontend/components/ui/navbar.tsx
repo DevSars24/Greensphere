@@ -23,6 +23,7 @@ export default function Navbar() {
         <div className="hidden md:flex gap-6 text-sm text-slate-300">
           {isGetStarted ? (
             <>
+              <Link href="/huggingface-ai" className="text-emerald-400 font-medium">HF AI Studio</Link>
               <Link href="#chatbot">Chatbot</Link>
               <Link href="#crop-doctor">Crop Doctor</Link>
               <Link href="#market">Market Prices</Link>
@@ -31,6 +32,7 @@ export default function Navbar() {
             </>
           ) : (
             <>
+              <Link href="/huggingface-ai" className="text-emerald-400 font-medium">HF AI Studio</Link>
               <Link href="#features">Features</Link>
               <Link href="#developers">Developers</Link>
               <Link href="#about">About</Link>
