@@ -2,436 +2,603 @@
 
 import { useEffect, useState } from "react";
 import Image from "next/image";
-import { motion, AnimatePresence } from "framer-motion";
 import Link from "next/link";
+import { AnimatePresence, motion } from "framer-motion";
+import {
+  ArrowDown,
+  ArrowRight,
+  MoveRight,
+  Github,
+  Linkedin,
+  Leaf,
+  CloudSun,
+  ScrollText,
+  Menu,
+  X,
+} from "lucide-react";
+
 import { Button } from "@/components/ui/button";
 import { Avatar, AvatarFallback } from "@/components/ui/avatar";
 import { Badge } from "@/components/ui/badge";
-import { MoveRight, Github, Linkedin, Leaf, CloudSun, ScrollText } from "lucide-react";
 import { SignUpButton, SignedIn, SignedOut, UserButton } from "@clerk/nextjs";
 
+const animatedTexts = [
+  { main: "Smarter Farming", sub: "Better Decisions" },
+  { main: "Smarter Farming", sub: "Better Tomorrow" },
+  { main: "Smarter Farming", sub: "Better Yield" },
+];
+
+const features = [
+  {
+    number: "01",
+    title: "Crop Health",
+    description:
+      "Get AI-assisted insights into potential crop diseases from photos and explore possible next steps for healthier crops.",
+    icon: Leaf,
+    color: "text-[#35490C]",
+    iconBg: "bg-[#35490C]/10",
+  },
+  {
+    number: "02",
+    title: "Weather Alerts",
+    description:
+      "Use local weather information to plan fieldwork, irrigation, and harvests with greater confidence.",
+    icon: CloudSun,
+    color: "text-[#986118]",
+    iconBg: "bg-[#986118]/10",
+  },
+  {
+    number: "03",
+    title: "Government Schemes",
+    description:
+      "Discover agricultural schemes, explore eligibility details, and find guidance for the application process.",
+    icon: ScrollText,
+    color: "text-[#513A1F]",
+    iconBg: "bg-[#513A1F]/10",
+  },
+];
+
+const steps = [
+  {
+    number: "01",
+    emoji: "💬",
+    title: "Ask your question",
+    description:
+      "Ask farming questions in your preferred language and upload crop photos when you need help understanding a possible issue.",
+  },
+  {
+    number: "02",
+    emoji: "🌱",
+    title: "Explore AI insights",
+    description:
+      "Get relevant farming guidance based on your question and the information available to the platform.",
+  },
+  {
+    number: "03",
+    emoji: "🤝",
+    title: "Plan your next step",
+    description:
+      "Explore possible actions, learn about agricultural schemes, and make more informed farming decisions.",
+  },
+];
+
 export default function LandingPage() {
+  const [textIndex, setTextIndex] = useState(0);
+  const [menuOpen, setMenuOpen] = useState(false);
+
   useEffect(() => {
+    const interval = window.setInterval(() => {
+      setTextIndex((current) => (current + 1) % animatedTexts.length);
+    }, 4000);
+
+    return () => window.clearInterval(interval);
+  }, []);
+
+  useEffect(() => {
+    const elements = document.querySelectorAll(".reveal");
+
     const observer = new IntersectionObserver(
       (entries) => {
         entries.forEach((entry) => {
           if (entry.isIntersecting) {
             entry.target.classList.add("animate-in");
+            observer.unobserve(entry.target);
           }
         });
       },
-      { threshold: 0.1 }
+      { threshold: 0.1 },
     );
 
-    document.querySelectorAll(".reveal").forEach((el) => observer.observe(el));
+    elements.forEach((element) => observer.observe(element));
+
     return () => observer.disconnect();
   }, []);
 
-  const [textIndex, setTextIndex] = useState(0);
-  const animatedTexts = [
-    { main: "Smarter Farming", sub: "Better Decisions" },
-    { main: "Smarter Farming", sub: "Better Tomorrow" },
-    { main: "Smarter Farming", sub: "Better Yield" },
-  ];
-
-  useEffect(() => {
-    const interval = setInterval(() => {
-      setTextIndex((prev: number) => (prev + 1) % animatedTexts.length);
-    }, 4000);
-    return () => clearInterval(interval);
-  }, [animatedTexts.length]);
-
   return (
-    <>
-      <style jsx global>{`
-        @keyframes blob {
-          0% { transform: translate(0px, 0px) scale(1); }
-          33% { transform: translate(30px, -50px) scale(1.1); }
-          66% { transform: translate(-20px, 20px) scale(0.9); }
-          100% { transform: translate(0px, 0px) scale(1); }
-        }
-        .animate-blob { animation: blob 7s infinite; }
-        .animation-delay-2000 { animation-delay: 2s; }
-        .animation-delay-4000 { animation-delay: 4s; }
-        .glass {
-          background: rgba(10, 10, 10, 0.6);
-          backdrop-filter: blur(16px);
-          border: 1px solid rgba(255, 255, 255, 0.05);
-        }
-        .reveal {
-          opacity: 0;
-          transform: translateY(30px);
-          transition: all 0.8s cubic-bezier(0.22, 1, 0.36, 1);
-        }
-        .reveal.animate-in {
-          opacity: 1;
-          transform: translateY(0);
-        }
-        .text-animate-in {
-          /* We'll use framer-motion instead for the hero text */
-        }
-      `}</style>
+    <main className="min-h-screen overflow-x-hidden bg-[#F6F6E7] text-[#0C0D03]">
+      {/* Background decoration */}
+      <div
+        aria-hidden="true"
+        className="pointer-events-none fixed inset-0 -z-0 overflow-hidden">
+        <div className="animate-blob absolute -left-40 top-20 h-80 w-80 rounded-full bg-[#575610]/10 blur-[100px]" />
+        <div className="animate-blob animation-delay-2000 absolute -right-40 top-52 h-96 w-96 rounded-full bg-[#986118]/10 blur-[110px]" />
+        <div className="animate-blob animation-delay-4000 absolute -bottom-40 left-1/3 h-96 w-96 rounded-full bg-[#35490C]/10 blur-[110px]" />
+      </div>
 
-      <div className="min-h-screen bg-black text-slate-100 overflow-x-hidden selection:bg-emerald-500/30">
-        {/* Background blobs - more subtle for a pitch black theme */}
-        <div className="fixed inset-0 -z-10 overflow-hidden bg-black">
-          <div className="absolute top-0 -left-4 w-96 h-96 bg-zinc-800/20 rounded-full blur-[100px] animate-blob" />
-          <div className="absolute top-0 -right-4 w-96 h-96 bg-zinc-900/40 rounded-full blur-[100px] animate-blob animation-delay-2000" />
-          <div className="absolute -bottom-8 left-20 w-96 h-96 bg-neutral-800/20 rounded-full blur-[100px] animate-blob animation-delay-4000" />
-          <div className="absolute inset-0 bg-[url('/noise.png')] opacity-[0.03] mix-blend-overlay pointer-events-none"></div>
-        </div>
+      {/* Navbar */}
+      <header className="fixed left-0 right-0 top-0 z-50 px-4 pt-3 sm:px-6">
+        <nav className="glass mx-auto flex max-w-7xl items-center justify-between rounded-2xl px-5 py-3 sm:px-6">
+          <Link
+            href="/"
+            className="text-lg font-black tracking-tight sm:text-xl">
+            KRISHI <span className="text-[#35490C]">MITRA</span>
+          </Link>
 
-        {/* Navbar */}
-        <nav className="fixed top-0 w-full z-[100] px-6 py-4 transition-all duration-300">
-          <div className="max-w-7xl mx-auto glass rounded-2xl px-6 py-3 flex justify-between items-center hover:bg-black/40 transition-colors duration-300">
-            <h1 className="text-xl font-extrabold tracking-tight bg-gradient-to-r from-white via-zinc-200 to-zinc-400 bg-clip-text text-transparent hover:scale-105 transition-transform cursor-pointer">
-              KRISHI MITRA
-            </h1>
+          <div className="hidden items-center gap-7 md:flex">
+            <Link
+              href="#features"
+              className="text-sm font-medium text-[#575610] transition hover:text-[#0C0D03]">
+              Why Choose Us
+            </Link>
+            <Link
+              href="#app-preview"
+              className="text-sm font-medium text-[#575610] transition hover:text-[#0C0D03]">
+              Platform
+            </Link>
+            <Link
+              href="#how-it-works"
+              className="text-sm font-medium text-[#575610] transition hover:text-[#0C0D03]">
+              How It Works
+            </Link>
+          </div>
 
-            <div className="flex items-center gap-6">
-              <button className="hidden md:block text-sm font-medium text-zinc-400 hover:text-white transition-colors duration-300">
-                Platform
-              </button>
+          <div className="hidden items-center gap-3 md:flex">
+            <SignedOut>
+              <SignUpButton mode="modal">
+                <Button className="rounded-xl bg-[#35490C] px-5 font-semibold text-white hover:bg-[#263708]">
+                  Get Started <ArrowRight className="ml-2 h-4 w-4" />
+                </Button>
+              </SignUpButton>
+            </SignedOut>
+
+            <SignedIn>
+              <Link href="/get-started">
+                <Button
+                  variant="outline"
+                  className="rounded-xl border-[#35490C]/25 bg-transparent text-[#35490C] hover:bg-[#35490C]/10">
+                  Dashboard
+                </Button>
+              </Link>
+              <UserButton />
+            </SignedIn>
+          </div>
+
+          <button
+            type="button"
+            aria-label={menuOpen ? "Close menu" : "Open menu"}
+            aria-expanded={menuOpen}
+            onClick={() => setMenuOpen((open) => !open)}
+            className="rounded-lg p-2 text-[#35490C] hover:bg-[#35490C]/10 md:hidden">
+            {menuOpen ? <X size={22} /> : <Menu size={22} />}
+          </button>
+        </nav>
+
+        {menuOpen && (
+          <div className="glass mx-auto mt-2 max-w-7xl rounded-2xl p-4 shadow-lg md:hidden">
+            <div className="flex flex-col gap-1">
+              {[
+                ["Why Choose Us", "#features"],
+                ["Platform", "#app-preview"],
+                ["How It Works", "#how-it-works"],
+              ].map(([label, href]) => (
+                <Link
+                  key={href}
+                  href={href}
+                  onClick={() => setMenuOpen(false)}
+                  className="rounded-xl px-4 py-3 text-sm font-medium text-[#35490C] hover:bg-[#35490C]/10">
+                  {label}
+                </Link>
+              ))}
 
               <SignedOut>
                 <SignUpButton mode="modal">
-                  <Button className="bg-white text-black hover:bg-zinc-200 hover:scale-105 active:scale-95 transition-all duration-300 rounded-xl px-5 font-bold">
+                  <Button className="mt-2 rounded-xl bg-[#35490C] font-semibold text-white hover:bg-[#263708]">
                     Get Started
                   </Button>
                 </SignUpButton>
               </SignedOut>
 
               <SignedIn>
-                <div className="flex items-center gap-4">
-                  <Link href="/get-started">
-                    <Button variant="ghost" className="text-zinc-300 hover:text-white hover:bg-white/10 transition-all rounded-xl">
-                      Dashboard
-                    </Button>
-                  </Link>
-                  <UserButton afterSignOutUrl="/" />
-                </div>
-              </SignedIn>
-            </div>
-          </div>
-        </nav>
-
-        {/* Hero */}
-        <section className="pt-48 pb-24 px-6 text-center relative">
-          <div className="max-w-7xl mx-auto relative z-10">
-            <div className="reveal inline-flex items-center gap-2 glass px-4 py-1.5 rounded-full mb-10 hover:border-white/20 transition-colors cursor-default">
-              <Badge className="bg-emerald-500/20 text-emerald-400 hover:bg-emerald-500/30 transition-colors border-0">New</Badge>
-              <span className="text-xs text-zinc-400 font-medium">
-                Built for Indian Farmers • Powered by AI
-              </span>
-            </div>
-            
-            <h1 className="reveal text-6xl md:text-8xl lg:text-[7rem] font-black mb-10 leading-[1.1] tracking-tight min-h-[180px] md:min-h-[220px] lg:min-h-[260px] flex flex-col justify-center relative">
-              <AnimatePresence mode="wait">
-                <motion.div
-                  key={textIndex}
-                  initial={{ opacity: 0, y: 20 }}
-                  animate={{ opacity: 1, y: 0 }}
-                  exit={{ opacity: 0, y: -20 }}
-                  transition={{ duration: 0.8, ease: [0.22, 1, 0.36, 1] }}
-                  className="absolute inset-0 flex flex-col justify-center"
-                >
-                  <span className="bg-gradient-to-b from-white via-zinc-200 to-zinc-500 bg-clip-text text-transparent block">
-                    {animatedTexts[textIndex].main}
-                  </span>
-
-                  <span className="bg-gradient-to-r from-emerald-300 via-green-400 to-emerald-500 bg-clip-text text-transparent block drop-shadow-[0_0_20px_rgba(16,185,129,0.3)] mt-2">
-                    {animatedTexts[textIndex].sub}
-                  </span>
-                </motion.div>
-              </AnimatePresence>
-            </h1>
-
-            <p className="reveal text-lg md:text-xl text-zinc-400 max-w-2xl mx-auto mb-14 leading-relaxed font-medium">
-              Krishi Mitra helps farmers make better decisions using AI — from crop
-              health and weather alerts to government schemes.
-            </p>
-
-            <div className="reveal flex flex-col sm:flex-row justify-center gap-5 mb-24 items-center">
-              <SignedOut>
-                <SignUpButton mode="modal">
-                  <Button size="lg" className="h-14 bg-gradient-to-r from-emerald-400 to-green-500 text-black hover:from-emerald-300 hover:to-green-400 rounded-2xl px-10 shadow-[0_0_40px_-10px_rgba(16,185,129,0.5)] hover:shadow-[0_0_60px_-10px_rgba(16,185,129,0.6)] font-bold text-lg hover:-translate-y-1 active:scale-95 transition-all duration-300">
-                    Start Using Krishi Mitra
-                  </Button>
-                </SignUpButton>
-              </SignedOut>
-
-              <SignedIn>
-                <Link href="/get-started">
-                  <Button size="lg" className="h-14 bg-gradient-to-r from-emerald-400 to-green-500 text-black hover:from-emerald-300 hover:to-green-400 rounded-2xl px-10 shadow-[0_0_40px_-10px_rgba(16,185,129,0.5)] hover:shadow-[0_0_60px_-10px_rgba(16,185,129,0.6)] font-bold text-lg hover:-translate-y-1 active:scale-95 transition-all duration-300 group">
-                    Go to Dashboard <MoveRight className="ml-2 h-5 w-5 group-hover:translate-x-1 transition-transform" />
+                <Link href="/get-started" onClick={() => setMenuOpen(false)}>
+                  <Button className="mt-2 w-full rounded-xl bg-[#35490C] text-white hover:bg-[#263708]">
+                    Open Dashboard
                   </Button>
                 </Link>
               </SignedIn>
+            </div>
+          </div>
+        )}
+      </header>
 
-              <Link href="#how-it-works">
+      {/* 1. HERO — smaller heading and less top spacing */}
+      <section className="relative z-10 px-5 pb-12 pt-28 text-center sm:px-6 sm:pt-32 md:pt-36">
+        <div className="mx-auto max-w-7xl">
+          <div className="reveal mb-5 inline-flex items-center gap-2 rounded-full border border-[#35490C]/15 bg-white/65 px-4 py-2">
+            <span className="h-2 w-2 rounded-full bg-[#758C36]" />
+            <span className="text-xs font-semibold text-[#575610] sm:text-sm">
+              Built for Indian Farmers · Powered by AI
+            </span>
+          </div>
+
+          <h1 className="reveal mx-auto mb-4 flex min-h-[112px] flex-col justify-center text-4xl font-black leading-[1.08] tracking-[-0.045em] sm:min-h-[140px] sm:text-6xl md:min-h-[155px] md:text-7xl lg:text-[5.5rem]">
+            <AnimatePresence mode="wait">
+              <motion.span
+                key={textIndex}
+                initial={{ opacity: 0, y: 12 }}
+                animate={{ opacity: 1, y: 0 }}
+                exit={{ opacity: 0, y: -12 }}
+                transition={{ duration: 0.45 }}
+                className="flex flex-col">
+                <span className="bg-gradient-to-b from-[#0C0D03] via-[#513A1F] to-[#35490C] bg-clip-text text-transparent">
+                  {animatedTexts[textIndex].main}
+                </span>
+                <span className="mt-1 bg-gradient-to-r from-[#986118] via-[#986118] to-[#35490C] bg-clip-text text-transparent">
+                  {animatedTexts[textIndex].sub}
+                </span>
+              </motion.span>
+            </AnimatePresence>
+          </h1>
+
+          <p className="reveal mx-auto mb-6 max-w-2xl text-sm leading-7 text-[#575610] sm:text-base md:text-lg">
+            Krishi Mitra helps farmers make better decisions using AI — from
+            crop health and weather information to government schemes.
+          </p>
+
+          <div className="reveal mb-8 flex flex-col items-center justify-center gap-3 sm:flex-row">
+            <SignedOut>
+              <SignUpButton mode="modal">
                 <Button
                   size="lg"
-                  variant="outline"
-                  className="h-14 rounded-2xl px-10 bg-black/40 backdrop-blur-md border-[1.5px] border-zinc-700 text-zinc-300 hover:border-white hover:text-white hover:bg-white/5 hover:-translate-y-1 active:scale-95 transition-all duration-300 font-semibold text-lg"
-                >
-                  See How It Works
+                  className="h-12 rounded-xl bg-[#35490C] px-6 font-bold text-white shadow-md shadow-[#35490C]/15 transition hover:-translate-y-0.5 hover:bg-[#263708]">
+                  Start Using Krishi Mitra
+                  <MoveRight className="ml-2 h-5 w-5" />
+                </Button>
+              </SignUpButton>
+            </SignedOut>
+
+            <SignedIn>
+              <Link href="/get-started">
+                <Button
+                  size="lg"
+                  className="h-12 rounded-xl bg-[#35490C] px-6 font-bold text-white hover:bg-[#263708]">
+                  Go to Dashboard
+                  <MoveRight className="ml-2 h-5 w-5" />
                 </Button>
               </Link>
-            </div>
+            </SignedIn>
 
-            <div className="reveal max-w-5xl mx-auto relative group perspective">
-              <div className="absolute -inset-1 bg-gradient-to-b from-white/10 to-transparent rounded-[2.5rem] blur-xl opacity-0 group-hover:opacity-100 transition duration-1000"></div>
-              <div className="glass rounded-[2rem] p-3 md:p-4 transform transition-all duration-700 group-hover:scale-[1.02] group-hover:-translate-y-2 group-hover:shadow-[0_30px_60px_-15px_rgba(0,0,0,0.8)] border border-white/5 group-hover:border-white/10 relative z-10">
-                <div className="absolute inset-0 bg-gradient-to-t from-black via-transparent to-transparent z-20 rounded-[1.6rem] pointer-events-none opacity-60"></div>
-                <Image
-                  src="/KrishiPage.png"
-                  alt="Krishi Mitra App"
-                  width={1200}
-                  height={675}
-                  className="rounded-[1.3rem] w-full h-auto object-cover border border-white/5"
-                  priority
-                />
+            <Link href="#how-it-works">
+              <Button
+                size="lg"
+                variant="outline"
+                className="h-12 rounded-xl border-[#513A1F]/25 bg-white/60 px-6 font-semibold text-[#513A1F] hover:bg-white">
+                See How It Works
+                <ArrowDown className="ml-2 h-4 w-4" />
+              </Button>
+            </Link>
+          </div>
+
+          <div className="reveal mx-auto max-w-6xl">
+            <div className="group relative">
+              <div className="absolute -inset-2 rounded-[2rem] bg-[#35490C]/10 blur-2xl transition-opacity duration-700 group-hover:bg-[#35490C]/15" />
+
+              <div className="relative overflow-hidden rounded-2xl border border-[#0C0D03]/10 bg-[#0C0D03] shadow-[0_25px_70px_-35px_rgba(12,13,3,0.4)] sm:rounded-[1.75rem]">
+                <video
+                  className="aspect-video max-h-[560px] w-full object-cover"
+                  autoPlay
+                  muted
+                  loop
+                  playsInline
+                  preload="metadata"
+                  poster="/hero-field.jpg"
+                  aria-label="Wheat moving gently in a field">
+                  <source src="/videos/hero-wheat.mp4" type="video/mp4" />
+                  Your browser does not support embedded video.
+                </video>
+
+                <div className="pointer-events-none absolute inset-0 bg-gradient-to-t from-[#0C0D03]/65 via-transparent to-transparent" />
+
+                <div className="absolute bottom-4 left-4 right-4 text-left text-white sm:bottom-6 sm:left-6 sm:right-6">
+                  <p className="mb-1 text-[10px] font-semibold uppercase tracking-[0.2em] text-white/75 sm:text-xs">
+                    Rooted in the real world
+                  </p>
+                  <p className="text-base font-semibold sm:text-2xl">
+                    Better insights. Stronger harvests.
+                  </p>
+                </div>
               </div>
             </div>
           </div>
-        </section>
 
-        {/* Quick Features Highlight */}
-        <section className="py-24 px-6 relative z-20">
-          <div className="max-w-7xl mx-auto">
-            <div className="grid md:grid-cols-3 gap-8">
+          <div className="reveal mt-5 flex flex-wrap items-center justify-center gap-x-6 gap-y-2 text-xs font-medium text-[#575610] sm:text-sm">
+            <span className="flex items-center gap-2">
+              <Leaf size={15} className="text-[#35490C]" />
+              Farmer-focused tools
+            </span>
+            <span className="flex items-center gap-2">
+              <CloudSun size={15} className="text-[#986118]" />
+              Practical insights
+            </span>
+            <span className="flex items-center gap-2">
+              <ScrollText size={15} className="text-[#513A1F]" />
+              Scheme guidance
+            </span>
+          </div>
+        </div>
+      </section>
 
-              {/* Feature 1 */}
-              <div className="reveal relative group cursor-pointer">
-                <div className="absolute -inset-0.5 bg-gradient-to-br from-emerald-500/20 to-transparent rounded-[2rem] blur-md opacity-0 group-hover:opacity-100 transition duration-700" />
-                <div className="relative h-full bg-[#0a0a0a] border border-white/[0.08] rounded-[2rem] p-10 hover:border-emerald-500/30 hover:-translate-y-2 hover:shadow-[0_20px_40px_-15px_rgba(16,185,129,0.15)] transition-all duration-500">
-                  <div className="w-16 h-16 rounded-2xl bg-emerald-500/10 flex items-center justify-center mb-6 group-hover:scale-110 group-hover:rotate-6 transition-transform duration-500 border border-emerald-500/20">
-                    <Leaf className="w-8 h-8 text-emerald-400" />
+      {/* 2. WHY CHOOSE US */}
+      <section
+        id="features"
+        className="relative z-10 px-5 py-16 sm:px-6 md:py-20">
+        <div className="mx-auto max-w-7xl">
+          <div className="reveal mb-10 max-w-2xl md:mb-12">
+            <p className="mb-3 text-xs font-bold uppercase tracking-[0.22em] text-[#986118]">
+              Why choose Krishi Mitra?
+            </p>
+            <h2 className="text-3xl font-black tracking-tight sm:text-4xl md:text-5xl">
+              Made for the realities of{" "}
+              <span className="text-[#35490C]">farming.</span>
+            </h2>
+            <p className="mt-4 max-w-xl leading-7 text-[#575610]">
+              Useful tools for everyday questions — with a focus on making
+              farming information easier to explore and understand.
+            </p>
+          </div>
+
+          <div className="grid gap-5 md:grid-cols-3 md:gap-6">
+            {features.map((feature) => {
+              const Icon = feature.icon;
+
+              return (
+                <article
+                  key={feature.number}
+                  className="reveal group relative overflow-hidden rounded-3xl border border-[#0C0D03]/[0.08] bg-white/75 p-7 transition duration-300 hover:-translate-y-1 hover:border-[#35490C]/25 hover:shadow-xl hover:shadow-[#0C0D03]/5 sm:p-8">
+                  <div className="mb-8 flex items-start justify-between">
+                    <div className={`rounded-2xl p-4 ${feature.iconBg}`}>
+                      <Icon className={`h-7 w-7 ${feature.color}`} />
+                    </div>
+                    <span className="text-xs font-bold tracking-widest text-[#575610]/50">
+                      {feature.number}
+                    </span>
                   </div>
-                  <h3 className="font-bold text-white mb-3 text-xl group-hover:text-emerald-400 transition-colors">Crop Health</h3>
-                  <p className="text-base text-zinc-400 leading-relaxed">AI-powered disease detection from photos. Upload an image and get an accurate diagnosis and treatment plan in seconds.</p>
-                </div>
-              </div>
 
-              {/* Feature 2 */}
-              <div className="reveal relative group cursor-pointer" style={{ transitionDelay: "100ms" }}>
-                <div className="absolute -inset-0.5 bg-gradient-to-br from-blue-500/20 to-transparent rounded-[2rem] blur-md opacity-0 group-hover:opacity-100 transition duration-700" />
-                <div className="relative h-full bg-[#0a0a0a] border border-white/[0.08] rounded-[2rem] p-10 hover:border-blue-500/30 hover:-translate-y-2 hover:shadow-[0_20px_40px_-15px_rgba(59,130,246,0.15)] transition-all duration-500">
-                  <div className="w-16 h-16 rounded-2xl bg-blue-500/10 flex items-center justify-center mb-6 group-hover:scale-110 group-hover:-rotate-6 transition-transform duration-500 border border-blue-500/20">
-                    <CloudSun className="w-8 h-8 text-blue-400" />
+                  <h3 className="mb-3 text-xl font-bold sm:text-2xl">
+                    {feature.title}
+                  </h3>
+                  <p className="text-sm leading-7 text-[#575610] sm:text-base">
+                    {feature.description}
+                  </p>
+
+                  <div className="mt-7 flex items-center gap-2 text-sm font-bold text-[#35490C]">
+                    Explore the platform
+                    <ArrowRight className="h-4 w-4 transition-transform group-hover:translate-x-1" />
                   </div>
-                  <h3 className="font-bold text-white mb-3 text-xl group-hover:text-blue-400 transition-colors">Weather Alerts</h3>
-                  <p className="text-base text-zinc-400 leading-relaxed">Real-time localized precision forecasts and proactive farming tips to safely plan your harvest and watering schedule.</p>
-                </div>
-              </div>
+                </article>
+              );
+            })}
+          </div>
+        </div>
+      </section>
 
-              {/* Feature 3 */}
-              <div className="reveal relative group cursor-pointer" style={{ transitionDelay: "200ms" }}>
-                <div className="absolute -inset-0.5 bg-gradient-to-br from-green-500/20 to-transparent rounded-[2rem] blur-md opacity-0 group-hover:opacity-100 transition duration-700" />
-                <div className="relative h-full bg-[#0a0a0a] border border-white/[0.08] rounded-[2rem] p-10 hover:border-green-500/30 hover:-translate-y-2 hover:shadow-[0_20px_40px_-15px_rgba(34,197,94,0.15)] transition-all duration-500">
-                  <div className="w-16 h-16 rounded-2xl bg-green-500/10 flex items-center justify-center mb-6 group-hover:scale-110 group-hover:rotate-6 transition-transform duration-500 border border-green-500/20">
-                    <ScrollText className="w-8 h-8 text-green-400" />
-                  </div>
-                  <h3 className="font-bold text-white mb-3 text-xl group-hover:text-green-400 transition-colors">Govt Schemes</h3>
-                  <p className="text-base text-zinc-400 leading-relaxed">Instantly check your eligibility for subsidies and get step-by-step application assistance for agricultural benefits.</p>
-                </div>
-              </div>
+      {/* 3. KRISHI MITRA APP PREVIEW — your original image */}
+      <section
+        id="app-preview"
+        className="relative z-10 px-5 py-14 sm:px-6 md:py-20">
+        <div className="mx-auto max-w-7xl">
+          <div className="reveal mx-auto mb-9 max-w-2xl text-center">
+            <p className="mb-3 text-xs font-bold uppercase tracking-[0.22em] text-[#986118]">
+              Meet your farming assistant
+            </p>
+            <h2 className="text-3xl font-black tracking-tight sm:text-4xl md:text-5xl">
+              A closer look at{" "}
+              <span className="text-[#35490C]">Krishi Mitra.</span>
+            </h2>
+            <p className="mt-4 leading-7 text-[#575610]">
+              Explore the platform designed to bring helpful agricultural
+              information together in one place.
+            </p>
+          </div>
 
+          <div className="reveal group relative mx-auto max-w-6xl">
+            <div className="absolute -inset-3 rounded-[2rem] bg-[#35490C]/10 blur-2xl transition-opacity duration-700 group-hover:bg-[#35490C]/15" />
+
+            <div className="relative overflow-hidden rounded-2xl border border-[#0C0D03]/10 bg-white p-2 shadow-[0_25px_70px_-35px_rgba(12,13,3,0.3)] transition-transform duration-500 group-hover:-translate-y-1 sm:rounded-[1.75rem] sm:p-3">
+              <Image
+                src="/KrishiPage.png"
+                alt="Krishi Mitra application preview"
+                width={1200}
+                height={675}
+                priority={false}
+                className="h-auto w-full rounded-xl object-cover sm:rounded-2xl"
+              />
             </div>
           </div>
-        </section>
+        </div>
+      </section>
 
-        {/* How It Works Section */}
-        <section id="how-it-works" className="py-32 px-6 relative z-10 border-t border-white/5 bg-black/50">
-          <div className="max-w-7xl mx-auto">
+      {/* 4. HOW IT WORKS */}
+      <section
+        id="how-it-works"
+        className="relative z-10 border-y border-[#35490C]/10 bg-[#F1F0E4] px-5 py-16 sm:px-6 md:py-24">
+        <div className="mx-auto max-w-7xl">
+          <div className="reveal mb-12 text-center md:mb-16">
+            <p className="mb-3 text-xs font-bold uppercase tracking-[0.22em] text-[#986118]">
+              Simple by design
+            </p>
+            <h2 className="text-3xl font-black tracking-tight sm:text-4xl md:text-5xl">
+              How Krishi Mitra works
+            </h2>
+            <p className="mx-auto mt-4 max-w-2xl leading-7 text-[#575610] sm:text-lg">
+              Ask. Explore. Act. Get farming guidance in a simple, approachable
+              way.
+            </p>
+          </div>
 
-            {/* Heading */}
-            <div className="reveal text-center mb-24">
-              <h2 className="text-5xl md:text-6xl font-black tracking-tight mb-6 bg-gradient-to-b from-white to-zinc-500 bg-clip-text text-transparent inline-block">
-                How Krishi Mitra Works
-              </h2>
-              <p className="text-zinc-400 max-w-2xl mx-auto text-xl font-medium">
-                <span className="text-emerald-400">Ask. Analyze. Act.</span><br/>
-                Get accurate farming decisions powered by AI — in seconds.
+          <div className="grid items-center gap-10 lg:grid-cols-5 lg:gap-12">
+            <div className="reveal lg:col-span-3">
+              <div className="overflow-hidden rounded-3xl border border-[#35490C]/10 bg-[#F6F6E7] p-3 shadow-xl shadow-[#0C0D03]/5 sm:p-5">
+                <div className="mb-3 flex items-center gap-2 px-2 pt-2">
+                  <span className="h-2.5 w-2.5 rounded-full bg-[#986118]/70" />
+                  <span className="h-2.5 w-2.5 rounded-full bg-[#35490C]/40" />
+                  <span className="h-2.5 w-2.5 rounded-full bg-[#575610]/25" />
+                  <span className="ml-2 text-xs text-[#575610]">
+                    Your farming assistant
+                  </span>
+                </div>
+
+                <div className="overflow-hidden rounded-2xl border border-[#35490C]/10 bg-white">
+                  <Image
+                    src="/how-it-works.png"
+                    alt="How the Krishi Mitra chatbot works"
+                    width={1000}
+                    height={750}
+                    className="h-auto w-full object-cover"
+                  />
+                </div>
+              </div>
+              <p className="mt-4 text-center text-sm text-[#575610]">
+                Explore farming questions and practical guidance in one place.
               </p>
             </div>
 
-            {/* Main Content - Image + Steps */}
-            <div className="grid lg:grid-cols-5 gap-16 items-center mb-20">
-
-              {/* Left: Visual Diagram */}
-              <div className="reveal lg:col-span-3 order-2 lg:order-1 perspective">
-                <div className="relative group cursor-pointer">
-                  {/* Glow effect */}
-                  <div className="absolute -inset-4 bg-gradient-to-tr from-emerald-500/10 via-green-500/10 to-transparent rounded-[3rem] blur-2xl opacity-50 group-hover:opacity-100 transition duration-1000" />
-
-                  {/* Image container */}
-                  <div className="relative glass rounded-[2.5rem] p-4 overflow-hidden border border-white/5 group-hover:border-white/10 transition-colors duration-500 shadow-2xl">
-                    <div className="absolute inset-0 bg-gradient-to-br from-white/[0.02] to-transparent pointer-events-none rounded-[2.5rem]"></div>
-                    <div className="relative rounded-[2rem] overflow-hidden border border-white/5 bg-[#050505]">
-                      <Image
-                        src="/how-it-works.png"
-                        alt="How Krishi Mitra Chatbot Works"
-                        width={800}
-                        height={600}
-                        className="w-full h-auto transform group-hover:scale-105 group-hover:rotate-1 transition-all duration-1000"
-                      />
+            <div className="space-y-4 lg:col-span-2">
+              {steps.map((step) => (
+                <article
+                  key={step.number}
+                  className="reveal rounded-2xl border border-[#35490C]/10 bg-white/80 p-5 transition hover:border-[#35490C]/25 hover:shadow-lg sm:p-6">
+                  <div className="flex items-start gap-4">
+                    <div className="flex h-12 w-12 shrink-0 items-center justify-center rounded-xl bg-[#F1F0E4] text-2xl">
+                      {step.emoji}
+                    </div>
+                    <div>
+                      <p className="mb-2 text-[10px] font-bold tracking-[0.2em] text-[#986118]">
+                        STEP {step.number}
+                      </p>
+                      <h3 className="mb-2 text-lg font-bold">{step.title}</h3>
+                      <p className="text-sm leading-6 text-[#575610]">
+                        {step.description}
+                      </p>
                     </div>
                   </div>
-                </div>
-
-                <p className="text-center text-zinc-400 mt-8 text-base font-medium">
-                  <span className="text-emerald-400">✦</span> <span className="text-zinc-200">Interactive AI Chatbot</span> — Ask questions in your language, get instant expert advice
-                </p>
-              </div>
-
-              {/* Right: Step-by-step explanation */}
-              <div className="reveal lg:col-span-2 order-1 lg:order-2 space-y-6">
-
-                {/* Step 1 */}
-                <div className="relative group cursor-pointer">
-                  <div className="absolute -inset-0.5 bg-gradient-to-r from-zinc-800 to-transparent rounded-3xl blur-sm opacity-0 group-hover:opacity-100 transition duration-500" />
-                  <div className="relative bg-[#0a0a0a] border border-white/5 rounded-3xl p-8 hover:border-white/20 hover:-translate-x-2 transition-all duration-500">
-                    <div className="flex items-start gap-6">
-                      <div className="flex-shrink-0">
-                        <div className="w-14 h-14 rounded-2xl bg-zinc-900 border border-zinc-800 flex items-center justify-center group-hover:scale-110 transition-transform duration-500 shadow-inner">
-                          <span className="text-2xl">💬</span>
-                        </div>
-                      </div>
-                      <div>
-                        <div className="text-xs tracking-widest text-zinc-500 font-bold mb-2 uppercase">STEP 01</div>
-                        <h3 className="text-xl font-bold mb-2 text-white group-hover:text-zinc-200 transition-colors">Ask Your Question</h3>
-                        <p className="text-zinc-400 leading-relaxed text-sm">
-                          Type or speak your farming question in Hindi, English, or your local language. Upload crop photos for disease detection.
-                        </p>
-                      </div>
-                    </div>
-                  </div>
-                </div>
-
-                {/* Step 2 */}
-                <div className="relative group cursor-pointer">
-                  <div className="absolute -inset-0.5 bg-gradient-to-r from-zinc-800 to-transparent rounded-3xl blur-sm opacity-0 group-hover:opacity-100 transition duration-500" />
-                  <div className="relative bg-[#0a0a0a] border border-white/5 rounded-3xl p-8 hover:border-white/20 hover:-translate-x-2 transition-all duration-500">
-                    <div className="flex items-start gap-6">
-                      <div className="flex-shrink-0">
-                        <div className="w-14 h-14 rounded-2xl bg-zinc-900 border border-zinc-800 flex items-center justify-center group-hover:scale-110 transition-transform duration-500 shadow-inner">
-                          <span className="text-2xl">🧠</span>
-                        </div>
-                      </div>
-                      <div>
-                        <div className="text-xs tracking-widest text-zinc-500 font-bold mb-2 uppercase">STEP 02</div>
-                        <h3 className="text-xl font-bold mb-2 text-white group-hover:text-zinc-200 transition-colors">AI Analyzes Context</h3>
-                        <p className="text-zinc-400 leading-relaxed text-sm">
-                          Our AI processes your query with real-time weather data, soil info, and verified agricultural research instantly.
-                        </p>
-                      </div>
-                    </div>
-                  </div>
-                </div>
-
-                {/* Step 3 */}
-                <div className="relative group cursor-pointer">
-                  <div className="absolute -inset-0.5 bg-gradient-to-r from-zinc-800 to-transparent rounded-3xl blur-sm opacity-0 group-hover:opacity-100 transition duration-500" />
-                  <div className="relative bg-[#0a0a0a] border border-white/5 rounded-3xl p-8 hover:border-white/20 hover:-translate-x-2 transition-all duration-500">
-                    <div className="flex items-start gap-6">
-                      <div className="flex-shrink-0">
-                        <div className="w-14 h-14 rounded-2xl bg-zinc-900 border border-zinc-800 flex items-center justify-center group-hover:scale-110 transition-transform duration-500 shadow-inner">
-                          <span className="text-2xl">⚡</span>
-                        </div>
-                      </div>
-                      <div>
-                        <div className="text-xs tracking-widest text-zinc-500 font-bold mb-2 uppercase">STEP 03</div>
-                        <h3 className="text-xl font-bold mb-2 text-white group-hover:text-zinc-200 transition-colors">Get Expert Solutions</h3>
-                        <p className="text-zinc-400 leading-relaxed text-sm">
-                          Receive actionable advice, treatment plans, scheme eligibility, and personalized recommendations contextually.
-                        </p>
-                      </div>
-                    </div>
-                  </div>
-                </div>
-
-              </div>
-            </div>
-
-            {/* Bottom CTA */}
-            <div className="reveal text-center mt-32">
-              <div className="inline-flex flex-col sm:flex-row items-center gap-6 glass px-10 py-8 rounded-[2rem] border border-white/10 hover:border-white/20 transition-all duration-500 hover:shadow-[0_0_50px_-10px_rgba(255,255,255,0.05)] cursor-default">
-                <span className="text-zinc-300 text-xl font-medium">Ready to transform your farm?</span>
-                <SignedOut>
-                  <SignUpButton mode="modal">
-                    <Button className="h-12 bg-white text-black hover:bg-zinc-200 rounded-xl px-8 font-bold text-base hover:scale-105 active:scale-95 transition-all">
-                      Try Krishi Mitra Free
-                    </Button>
-                  </SignUpButton>
-                </SignedOut>
-                <SignedIn>
-                  <Link href="/get-started">
-                    <Button className="h-12 bg-white text-black hover:bg-zinc-200 rounded-xl px-8 font-bold text-base hover:scale-105 active:scale-95 transition-all group">
-                      Go to Dashboard <MoveRight className="ml-2 h-5 w-5 group-hover:translate-x-1 transition-transform" />
-                    </Button>
-                  </Link>
-                </SignedIn>
-              </div>
-            </div>
-
-          </div>
-        </section>
-
-        {/* Developers */}
-        <section className="py-32 px-6 border-t border-white/5 relative overflow-hidden">
-          {/* Subtle background element */}
-          <div className="absolute top-0 left-1/2 -translate-x-1/2 w-full max-w-3xl h-px bg-gradient-to-r from-transparent via-white/20 to-transparent"></div>
-          
-          <div className="max-w-7xl mx-auto text-center relative z-10">
-            <h2 className="reveal text-4xl md:text-5xl font-black mb-6 bg-gradient-to-r from-white to-zinc-500 bg-clip-text text-transparent">
-              Built by Engineers Who Care
-            </h2>
-            <p className="reveal text-zinc-400 mb-20 text-lg font-medium">
-              Designed and engineered by Team IIIT Bhagalpur
-            </p>
-
-            <div className="max-w-xl mx-auto">
-              {[
-                {
-                  name: "Saurabh Singh",
-                  role: "Lead Architect & Full Stack",
-                  initials: "SS",
-                  desc: "Backend-focused full-stack engineer passionate about AI agents, DevOps, and scalable systems.",
-                  github: "https://github.com/DevSars24",
-                  linkedin: "https://www.linkedin.com/in/saurabh-singh-25639a306",
-                },
-              ].map((dev, i) => (
-                <div key={i} className="reveal bg-[#0a0a0a] border border-white/5 p-10 rounded-[2.5rem] hover:border-white/20 hover:-translate-y-4 hover:shadow-[0_30px_60px_-15px_rgba(0,0,0,0.5)] transition-all duration-500 group cursor-pointer relative overflow-hidden">
-                  <div className="absolute inset-0 bg-gradient-to-br from-white/[0.03] to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-500"></div>
-                  
-                  <Avatar className="h-24 w-24 mx-auto mb-6 border border-white/10 group-hover:border-zinc-500 group-hover:scale-110 transition-all duration-500 shadow-xl relative z-10">
-                    <AvatarFallback className="text-2xl font-black bg-zinc-900 text-white">
-                      {dev.initials}
-                    </AvatarFallback>
-                  </Avatar>
-                  <h3 className="text-2xl font-bold text-white mb-2 relative z-10 group-hover:text-zinc-200 transition-colors">{dev.name}</h3>
-                  <Badge className="my-4 bg-zinc-900 text-zinc-300 border border-zinc-700 group-hover:border-zinc-500 group-hover:bg-zinc-800 transition-colors px-4 py-1 relative z-10">{dev.role}</Badge>
-                  <p className="text-zinc-500 mb-8 max-w-sm mx-auto group-hover:text-zinc-400 transition-colors relative z-10">{dev.desc}</p>
-                  <div className="flex justify-center gap-5 relative z-10">
-                    <Link href={dev.github} target="_blank" className="w-10 h-10 rounded-full bg-zinc-900 border border-zinc-800 flex items-center justify-center text-zinc-400 hover:text-white hover:bg-zinc-800 hover:border-zinc-600 hover:scale-110 active:scale-95 transition-all">
-                      <Github className="w-5 h-5" />
-                    </Link>
-                    <Link href={dev.linkedin} target="_blank" className="w-10 h-10 rounded-full bg-zinc-900 border border-zinc-800 flex items-center justify-center text-zinc-400 hover:text-white hover:bg-zinc-800 hover:border-zinc-600 hover:scale-110 active:scale-95 transition-all">
-                      <Linkedin className="w-5 h-5" />
-                    </Link>
-                  </div>
-                </div>
+                </article>
               ))}
             </div>
           </div>
-        </section>
 
-        {/* Footer */}
-        <footer className="py-12 text-center text-zinc-600 text-sm border-t border-white/5 bg-black">
-          <p className="hover:text-zinc-400 transition-colors cursor-default">© 2026 Krishi Mitra — Empowering Indian Farmers with AI Technology.</p>
-        </footer>
-      </div>
-    </>
+          <div className="reveal mt-12 flex flex-col items-center justify-between gap-5 rounded-3xl border border-[#35490C]/15 bg-[#F6F6E7] p-6 sm:p-8 md:flex-row">
+            <div>
+              <h3 className="text-xl font-bold sm:text-2xl">
+                Ready to explore Krishi Mitra?
+              </h3>
+              <p className="mt-2 text-sm leading-6 text-[#575610] sm:text-base">
+                Start with a farming question and explore the platform.
+              </p>
+            </div>
+
+            <SignedOut>
+              <SignUpButton mode="modal">
+                <Button className="rounded-xl bg-[#35490C] px-6 font-bold text-white hover:bg-[#263708]">
+                  Get Started <ArrowRight className="ml-2 h-4 w-4" />
+                </Button>
+              </SignUpButton>
+            </SignedOut>
+
+            <SignedIn>
+              <Link href="/get-started">
+                <Button className="rounded-xl bg-[#35490C] px-6 font-bold text-white hover:bg-[#263708]">
+                  Open Dashboard <ArrowRight className="ml-2 h-4 w-4" />
+                </Button>
+              </Link>
+            </SignedIn>
+          </div>
+        </div>
+      </section>
+
+      {/* 5. DEVELOPERS */}
+      <section id="team" className="relative z-10 px-5 py-16 sm:px-6 md:py-24">
+        <div className="mx-auto max-w-7xl text-center">
+          <div className="reveal mb-12">
+            <p className="mb-3 text-xs font-bold uppercase tracking-[0.22em] text-[#986118]">
+              Behind the platform
+            </p>
+            <h2 className="text-3xl font-black tracking-tight sm:text-4xl md:text-5xl">
+              Built by engineers who care
+            </h2>
+            <p className="mt-4 text-[#575610] sm:text-lg">
+              Designed and engineered by Team IIIT Bhagalpur.
+            </p>
+          </div>
+
+          <article className="reveal mx-auto max-w-xl rounded-3xl border border-[#35490C]/10 bg-white/80 p-8 text-center shadow-lg shadow-[#0C0D03]/5 transition hover:-translate-y-1 hover:shadow-xl sm:p-10">
+            <Avatar className="mx-auto mb-5 h-24 w-24 border-4 border-[#F1F0E4]">
+              <AvatarFallback className="bg-[#35490C] text-2xl font-black text-white">
+                SS
+              </AvatarFallback>
+            </Avatar>
+
+            <h3 className="mb-2 text-2xl font-bold">Saurabh Singh</h3>
+            <Badge className="border border-[#35490C]/15 bg-[#F1F0E4] px-4 py-1 text-[#35490C] hover:bg-[#F1F0E4]">
+              Lead Architect &amp; Full Stack
+            </Badge>
+
+            <p className="mx-auto mb-7 mt-5 max-w-sm leading-7 text-[#575610]">
+              Backend-focused full-stack engineer passionate about AI agents,
+              DevOps, and scalable systems.
+            </p>
+
+            <div className="flex justify-center gap-3">
+              <Link
+                href="https://github.com/DevSars24"
+                target="_blank"
+                rel="noreferrer"
+                aria-label="Saurabh Singh on GitHub"
+                className="flex h-11 w-11 items-center justify-center rounded-full border border-[#35490C]/15 bg-[#F1F0E4] text-[#35490C] transition hover:bg-[#35490C] hover:text-white">
+                <Github size={19} />
+              </Link>
+
+              <Link
+                href="https://www.linkedin.com/in/saurabh-singh-25639a306"
+                target="_blank"
+                rel="noreferrer"
+                aria-label="Saurabh Singh on LinkedIn"
+                className="flex h-11 w-11 items-center justify-center rounded-full border border-[#35490C]/15 bg-[#F1F0E4] text-[#35490C] transition hover:bg-[#35490C] hover:text-white">
+                <Linkedin size={19} />
+              </Link>
+            </div>
+          </article>
+        </div>
+      </section>
+
+      {/* 6. FOOTER */}
+      <footer className="relative z-10 border-t border-[#35490C]/10 bg-[#F1F0E4] px-5 py-7 sm:px-6">
+        <div className="mx-auto flex max-w-7xl flex-col items-center justify-between gap-4 text-center sm:flex-row sm:text-left">
+          <Link href="/" className="text-sm font-black tracking-tight">
+            KRISHI <span className="text-[#35490C]">MITRA</span>
+          </Link>
+
+          <p className="text-xs leading-6 text-[#575610] sm:text-sm">
+            © {new Date().getFullYear()} Krishi Mitra — Empowering Indian
+            farmers with AI technology.
+          </p>
+
+          <Link
+            href="#"
+            className="text-xs font-semibold text-[#35490C] hover:text-[#986118]">
+            Back to top ↑
+          </Link>
+        </div>
+      </footer>
+    </main>
   );
 }

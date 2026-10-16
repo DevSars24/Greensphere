@@ -15,7 +15,7 @@ const geistMono = Geist_Mono({
 });
 
 export const metadata: Metadata = {
-  title: "Krishi Mitra", // Yahan title change kar de 
+  title: "Krishi Mitra", // Yahan title change kar de
   description: "AI-Driven Agriculture",
 };
 
@@ -29,8 +29,7 @@ export default function RootLayout({
     <ClerkProvider>
       <html lang="en">
         <body
-          className={`${geistSans.variable} ${geistMono.variable} antialiased`}
-        >
+          className={`${geistSans.variable} ${geistMono.variable} antialiased`}>
           {children}
         </body>
       </html>
